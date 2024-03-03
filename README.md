@@ -4,7 +4,7 @@
 2. npm install.
 3. npm run start and enter access token.
 ## Tech Used
-Used readline for inputting from the terminal.
+Used readline for taking input from the terminal.
 
 Used Axios for Meta API call.
 ### A little more
