@@ -1,14 +1,11 @@
 {
   "name": "motion-take-home",
-  "bin":{
-    "john-cli-app":""
-  },
+  
   "version": "1.0.0",
   "description": "Take home assignment from Motion to get an actual interview",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "dev" : "tsc "
+    "start": "ts-node src/index.ts"
   },
   "author": "",
   "license": "ISC",
