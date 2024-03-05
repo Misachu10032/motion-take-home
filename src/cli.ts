@@ -35,7 +35,7 @@ const runCli = async (): Promise<void> => {
         try {
             const response = await getMetaAPIRequest(accessToken);
             console.log(response);
-
+            await waitTwoSeconds();
             consecutiveCounter = 0;
         } catch (error) {
             consecutiveCounter++;
