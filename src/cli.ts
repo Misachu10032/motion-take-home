@@ -1,9 +1,9 @@
 
 import * as readline from 'readline';
 
-import { waitTwoSeconds } from './utils/awaitHelper';
-import { getMetaAPIRequest } from './api';
-import { ErrorMessage, handleError } from './handleError';
+import { waitForXSeconds } from './utils/awaitHelper';
+import { SuccessResponse, getMetaAPIRequest } from './api';
+
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -22,29 +22,45 @@ const getAccessToken = (): Promise<string> => {
 
 const runCli = async (): Promise<void> => {
     const accessToken = await getAccessToken();
-   
-    console.log(`Your accessToken is, ${accessToken}!`);
-    let consecutiveCounter = 0
 
-    //requesting for 10 times at a inverval of 2s for demonstration
-    //I did not want a forever running app
+    console.log(`Your accessToken is, ${accessToken}!`);
+
+    
+    const callCountThreshHold = 20 //initialize the integer percentage of the total call can be used
+    //The aim is the keep the app 
+    // When reached 20%, variable call speed will be triggered
+    let requestSpeed = 2
+
     for (let i = 0; i < 1000; i++) {
         console.log(`request ${i + 1}`)
 
+
         try {
-            const response = await getMetaAPIRequest(accessToken);
-            console.log(response);
-            // await waitTwoSeconds();
-            consecutiveCounter = 0;
-        } catch (error) {
-            consecutiveCounter++;
-
-            const errorMessage = await handleError(error, consecutiveCounter);
-
-            if (errorMessage === ErrorMessage.authErrorMessage || errorMessage === ErrorMessage.otherErrorMessage) {
-                console.log('the App was terminated due non rate-limiting error')
-                break
+            const response: SuccessResponse = await getMetaAPIRequest(accessToken);
+            console.log(response.data);
+            
+            
+            const newCallCount = response.callCount;
+            if (newCallCount !== undefined) {
+                if(newCallCount > callCountThreshHold){
+                    //slow down if newCallCount exceed the threshold
+                    requestSpeed++
+        
+                }else{
+                    //reset the call speed to 2s 
+                    requestSpeed=2
+                    
+                }
+                
+          
+                console.log(`Your call_count is at ${newCallCount}, your next API call will happen in ${requestSpeed}s`);
             }
+
+            await waitForXSeconds(requestSpeed)
+
+        } catch (error) {
+            console.log('The app was terminated due to some error')
+            break
         }
 
 
