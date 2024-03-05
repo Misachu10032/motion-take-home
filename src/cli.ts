@@ -26,15 +26,16 @@ const runCli = async (): Promise<void> => {
     console.log(`Your accessToken is, ${accessToken}!`);
     let consecutiveCounter = 0
 
-    //requesting for 10 times at a inverval of 2s for demonstration
-    //I did not want a forever running app
+    //requesting for 1000 times at a inverval of 2s
+    //It will use an exponential backoff strategy to wait when rate limit is reached
+
     for (let i = 0; i < 1000; i++) {
         console.log(`request ${i + 1}`)
 
         try {
             const response = await getMetaAPIRequest(accessToken);
             console.log(response);
-            // await waitTwoSeconds();
+
             consecutiveCounter = 0;
         } catch (error) {
             consecutiveCounter++;

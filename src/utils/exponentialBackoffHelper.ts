@@ -6,8 +6,8 @@ export const exponentialBackoff = async ( consecutiveCounter:number):  Promise<v
         const defaultWaitInSeconds = 60;
         const exponentialBackOffFactor = Math.pow(2, consecutiveCounter);
         const newWaitTime =defaultWaitInSeconds*exponentialBackOffFactor;
-        console.log(`you are waiting for ${newWaitTime}s`)
-        await waitForXSeconds()
+        console.log(`you are waiting for ${newWaitTime}s`);
+        await waitForXSeconds(newWaitTime)
     
         
 
