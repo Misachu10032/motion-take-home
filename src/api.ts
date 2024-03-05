@@ -19,7 +19,7 @@ export const getMetaAPIRequest = async (accessToken:string): Promise<SuccessResp
       return response.data
 
 
-    } catch (error) {
+    } catch (error ) {
 
         throw error
     }
