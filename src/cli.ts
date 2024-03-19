@@ -3,6 +3,7 @@ import * as readline from 'readline';
 
 import { waitForXSeconds } from './utils/awaitHelper';
 import { SuccessResponse, getMetaAPIRequest } from './api';
+import { writeToMongo } from './db';
 
 
 const rl = readline.createInterface({
@@ -22,11 +23,11 @@ const getAccessToken = (): Promise<string> => {
 
 const runCli = async (): Promise<void> => {
     const accessToken = await getAccessToken();
-
     console.log(`Your accessToken is, ${accessToken}!`);
 
     
     const callCountThreshHold = 20 //initialize the integer percentage of the total call can be used
+    const criticalThreshold=80
     //The aim is the keep the app 
     // When reached 20%, variable call speed will be triggered
     let requestSpeed = 2
@@ -39,14 +40,16 @@ const runCli = async (): Promise<void> => {
             const response: SuccessResponse = await getMetaAPIRequest(accessToken);
             console.log(response.data);
             
-            
+            await writeToMongo(response.data)
             const newCallCount = response.callCount;
             if (newCallCount !== undefined) {
                 if(newCallCount > callCountThreshHold){
                     //slow down if newCallCount exceed the threshold
                     requestSpeed++
         
-                }else{
+                }
+                
+                else{
                     //reset the call speed to 2s 
                     requestSpeed=2
                     
